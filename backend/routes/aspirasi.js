@@ -33,16 +33,23 @@ const batasKirim = rateLimit({
 // Siswa kirim aspirasi (wajib NISN terdaftar)
 router.post('/', batasGagal, batasKirim, async (req, res) => {
   try {
-    const { nisn, inisial, kategori, judul, isi } = req.body;
+    const { nisn, kelas: kelasInput, inisial, kategori, judul, isi } = req.body;
 
     if (!/^\d{10}$/.test(String(nisn || '').trim()))
       return res.status(400).json({ message: 'NISN harus 10 digit angka' });
+    if (!['7', '8', '9'].includes(String(kelasInput)))
+      return res.status(400).json({ message: 'Kelas harus 7, 8, atau 9' });
 
     const [siswa] = await db.query('SELECT kelas FROM siswa WHERE nisn = ?', [String(nisn).trim()]);
     if (!siswa[0])
       return res.status(403).json({ message: 'NISN tidak terdaftar. Periksa kembali NISN kamu atau tanyakan ke wali kelas.' });
-    const kelas = siswa[0].kelas; // kelas diambil dari database
 
+    // NISN dan kelas harus cocok dengan data di tabel siswa
+    if (String(siswa[0].kelas) !== String(kelasInput))
+      return res.status(403).json({ message: 'Kelas tidak sesuai dengan data NISN. Pilih kelas yang benar.' });
+
+    const kelas = siswa[0].kelas; // kelas dari database (sama dengan pilihan siswa)
+    
     if (!/^[A-Za-z]{1,5}$/.test(inisial || ''))
       return res.status(400).json({ message: 'Inisial harus 1-5 huruf' });
     if (!KATEGORI.includes(kategori))

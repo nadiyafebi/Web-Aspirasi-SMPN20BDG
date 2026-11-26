@@ -220,7 +220,7 @@ const css = `
 }
 `;
 
-const kosong = { nisn: '', inisial: '', kategori: KATEGORI[0], isi: '' };
+const kosong = { nisn: '', inisial: '', kelas: '7', kategori: KATEGORI[0], isi: '' };
 
 export default function KirimAspirasi() {
   const [searchParams] = useSearchParams();
@@ -256,8 +256,8 @@ export default function KirimAspirasi() {
     try {
       const res = await api.kirimAspirasi({
         inisial: form.inisial,
+        kelas: form.kelas,
         kategori: form.kategori,
-        // Desain tidak punya kolom judul, jadi dibuat otomatis dari awal isi
         judul: form.isi.trim().slice(0, 80),
         isi: form.isi,
         nisn: form.nisn.trim(),
