@@ -1,5 +1,4 @@
 const router = require('express').Router();
-const crypto = require('crypto');
 const rateLimit = require('express-rate-limit');
 const db = require('../config/db');
 const { buatKode, hashKode } = require('../utils/kode');
@@ -10,13 +9,6 @@ const KATEGORI = [
   'Keamanan & Perlindungan Siswa',
   'Pembelajaran & Pelayanan Sekolah',
 ];
-
-// Pembanding kode akses (aman dari serangan pengukuran waktu)
-const samaKode = (a, b) => {
-  const x = crypto.createHash('sha256').update(String(a || '').trim().toUpperCase()).digest();
-  const y = crypto.createHash('sha256').update(String(b || '').trim().toUpperCase()).digest();
-  return crypto.timingSafeEqual(x, y);
-};
 
 // Rate limiter
 const batasGagal = rateLimit({
@@ -38,20 +30,21 @@ const batasKirim = rateLimit({
   message: { message: 'Terlalu banyak kiriman. Coba lagi nanti.' },
 });
 
-// Siswa kirim aspirasi (wajib kode akses sekolah)
+// Siswa kirim aspirasi (wajib NISN terdaftar)
 router.post('/', batasGagal, batasKirim, async (req, res) => {
   try {
-    if (!process.env.KODE_AKSES_SEKOLAH)
-      return res.status(500).json({ message: 'Kode akses belum diatur di server' });
-    if (!samaKode(req.body.kode_akses, process.env.KODE_AKSES_SEKOLAH))
-      return res.status(403).json({ message: 'Kode akses salah. Tanyakan kode akses kepada guru BK atau wali kelasmu.' });
+    const { nisn, inisial, kategori, judul, isi } = req.body;
 
-    const { inisial, kelas, kategori, judul, isi } = req.body;
+    if (!/^\d{10}$/.test(String(nisn || '').trim()))
+      return res.status(400).json({ message: 'NISN harus 10 digit angka' });
+
+    const [siswa] = await db.query('SELECT kelas FROM siswa WHERE nisn = ?', [String(nisn).trim()]);
+    if (!siswa[0])
+      return res.status(403).json({ message: 'NISN tidak terdaftar. Periksa kembali NISN kamu atau tanyakan ke wali kelas.' });
+    const kelas = siswa[0].kelas; // kelas diambil dari database
 
     if (!/^[A-Za-z]{1,5}$/.test(inisial || ''))
       return res.status(400).json({ message: 'Inisial harus 1-5 huruf' });
-    if (!['7', '8', '9'].includes(String(kelas)))
-      return res.status(400).json({ message: 'Kelas harus 7, 8, atau 9' });
     if (!KATEGORI.includes(kategori))
       return res.status(400).json({ message: 'Kategori tidak valid' });
     if (!judul || !isi)
@@ -62,21 +55,20 @@ router.post('/', batasGagal, batasKirim, async (req, res) => {
     const t = hitungPrioritas({ kategori, judul, isi });
     const kode = buatKode();
 
-    // Query INSERT yang sudah menyertakan 'kode_tiket' dan 'kode_hash'
     await db.query(
       `INSERT INTO aspirasi
         (kode_tiket, kode_hash, inisial, kelas, kategori, judul, isi, skor_prioritas, level_prioritas, alasan_prioritas)
        VALUES (?,?,?,?,?,?,?,?,?,?)`,
       [
-        kode, 
-        hashKode(kode), 
-        inisial.toUpperCase(), 
-        String(kelas), 
-        kategori, 
-        judul.trim(), 
+        kode,
+        hashKode(kode),
+        inisial.toUpperCase(),
+        String(kelas),
+        kategori,
+        judul.trim(),
         isi.trim(),
-        t.skor, 
-        t.level, 
+        t.skor,
+        t.level,
         t.alasan
       ]
     );

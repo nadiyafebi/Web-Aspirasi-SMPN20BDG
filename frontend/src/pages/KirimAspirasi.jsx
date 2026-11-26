@@ -220,7 +220,7 @@ const css = `
 }
 `;
 
-const kosong = { kode_akses: '', inisial: '', kelas: '7', kategori: KATEGORI[0], isi: '' };
+const kosong = { nisn: '', inisial: '', kategori: KATEGORI[0], isi: '' };
 
 export default function KirimAspirasi() {
   const [searchParams] = useSearchParams();
@@ -249,16 +249,18 @@ export default function KirimAspirasi() {
     if (!/^[A-Za-z]{1,5}$/.test(form.inisial)) {
       return setError('Inisial harus 1–5 huruf (tanpa spasi/angka).');
     }
+    if (!/^\d{10}$/.test(form.nisn.trim())) {
+      return setError('NISN harus 10 digit angka.');
+    }
     setLoading(true);
     try {
       const res = await api.kirimAspirasi({
         inisial: form.inisial,
-        kelas: form.kelas,
         kategori: form.kategori,
         // Desain tidak punya kolom judul, jadi dibuat otomatis dari awal isi
         judul: form.isi.trim().slice(0, 80),
         isi: form.isi,
-        kode_akses: form.kode_akses.trim(),
+        nisn: form.nisn.trim(),
       });
       setKode(res.kode_tiket);
       setForm(kosong);
@@ -335,12 +337,15 @@ export default function KirimAspirasi() {
 
         <form className="kr-form" onSubmit={submit}>
           <label className="kr-field">
-            Kode akses sekolah
+            NISN
             <input
               type="text"
-              placeholder="Kode dari sekolah"
-              value={form.kode_akses}
-              onChange={set('kode_akses')}
+              inputMode="numeric"
+              pattern="[0-9]{10}"
+              maxLength={10}
+              placeholder="10 digit NISN"
+              value={form.nisn}
+              onChange={(e) => setForm({ ...form, nisn: e.target.value.replace(/\D/g, '') })}
               required
             />
           </label>
