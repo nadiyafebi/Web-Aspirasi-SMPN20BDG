@@ -1,0 +1,326 @@
+/* =========================================
+   1. ROOT & VARIABLES
+   ========================================= */
+   :root {
+    --bg: #f6f3ec; --surface: #ffffff; --ink: #1d2a26; --muted: #667570; --line: #e2ddd0;
+    --brand: #0f5c4d; --brand-d: #0a4237; --accent: #e0a526; --danger: #b3382c; --radius: 14px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #121715; --surface: #1b231f; --ink: #eceee8; --muted: #9aa8a2; --line: #2b3631; --brand: #3fb59d; --brand-d: #2f9883; }
+  }
+  
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 'Plus Jakarta Sans', system-ui, sans-serif; }
+  h1, h2, h3 { font-family: 'Fraunces', Georgia, serif; line-height: 1.2; margin: 0 0 .5rem; }
+  h1 { font-size: clamp(2rem, 6vw, 3.4rem); }
+  h2 { font-size: 1.6rem; }
+  h3 { font-size: 1.15rem; margin-top: 1.5rem; }
+  a { color: var(--brand); }
+  .container { max-width: 960px; margin: 0 auto; padding: 0 16px; }
+  main.container { padding-top: 28px; padding-bottom: 64px; display: grid; gap: 18px; }
+  .muted { color: var(--muted); }
+  .center { text-align: center; }
+  .eyebrow { text-transform: uppercase; letter-spacing: .12em; font-size: .75rem; font-weight: 700; color: var(--brand); margin: 0 0 .5rem; }
+  
+  /* =========================================
+     2. NAVBAR & BUTTONS
+     ========================================= */
+  .navbar { background: var(--surface); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 5; }
+  .navbar-in { display: flex; justify-content: space-between; align-items: center; min-height: 60px; gap: 12px; flex-wrap: wrap; }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); font-weight: 700; }
+  .brand em { font-style: normal; color: var(--brand); }
+  .brand-mark { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 9px; background: var(--brand); color: #fff; font-family: 'Fraunces', serif; }
+  .navbar nav { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+  .navbar nav a { padding: 6px 12px; border-radius: 999px; text-decoration: none; color: var(--ink); font-weight: 500; font-size: .92rem; }
+  .navbar nav a.active { background: color-mix(in srgb, var(--brand) 14%, transparent); color: var(--brand); }
+  .nav-admin { border: 1px solid var(--line); }
+  .nav-user { color: var(--muted); font-size: .88rem; margin: 0 6px; }
+  
+  .btn { font: inherit; font-weight: 600; border: 1px solid transparent; border-radius: 10px; padding: 10px 18px; cursor: pointer; text-decoration: none; display: inline-block; transition: .15s; text-align: center; }
+  .btn:disabled { opacity: .6; cursor: wait; }
+  .btn-primary { background: var(--brand); color: #fff; }
+  .btn-primary:hover:not(:disabled) { background: var(--brand-d); }
+  .btn-outline { border-color: var(--brand); color: var(--brand); background: transparent; }
+  .btn-ghost { background: transparent; color: var(--muted); }
+  .btn-ghost:hover { color: var(--ink); }
+  .btn-lg { padding: 13px 26px; font-size: 1.02rem; }
+  .btn-sm { padding: 5px 12px; font-size: .85rem; }
+  .btn-block { width: 100%; display: flex; justify-content: center; }
+  
+  /* =========================================
+     3. HERO SECTION (DESKTOP)
+     ========================================= */
+  .hero { padding: 36px 0 8px; }
+  .hero em { font-style: italic; color: var(--brand); }
+  .lead { font-size: 1.12rem; color: var(--muted); max-width: 620px; }
+  .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; margin: 24px 0 36px; }
+  .steps { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+  .steps li { display: flex; gap: 12px; align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; }
+  .steps b { flex: none; width: 30px; height: 30px; display: grid; place-items: center; border-radius: 50%; background: var(--accent); color: #2a1d00; }
+  
+  /* =========================================
+     4. COMPONENTS (CARD, FORM, DLL)
+     ========================================= */
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; }
+  .card.narrow, .form.narrow { max-width: 420px; margin: 0 auto; width: 100%; }
+  .form { display: grid; gap: 14px; }
+  label { display: grid; gap: 5px; font-weight: 600; font-size: .92rem; }
+  label small { font-weight: 400; color: var(--muted); }
+  label.inline { display: flex; align-items: center; gap: 8px; }
+  label.inline input[type="checkbox"] { width: auto; margin: 0; }
+  input, select, textarea { font: inherit; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; width: 100%; }
+  input:focus, select:focus, textarea:focus { outline: 2px solid var(--brand); outline-offset: 1px; }
+  textarea { resize: vertical; }
+  input[type="file"] { background: transparent; padding: 8px 0; border: none; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .row.between { justify-content: space-between; }
+  .grow { flex: 1; min-width: 160px; }
+  .alert { background: color-mix(in srgb, var(--danger) 12%, transparent); color: var(--danger); border-radius: 10px; padding: 10px 14px; font-size: .92rem; }
+  .alert.ok { background: color-mix(in srgb, var(--brand) 14%, transparent); color: var(--brand); }
+  
+  /* =========================================
+     5. STYLE LAINNYA (TICKET, BADGE, TABLE)
+     ========================================= */
+  .success { text-align: center; }
+  .ticket { display: inline-block; font-family: ui-monospace, Menlo, monospace; font-weight: 700; letter-spacing: .08em; font-size: 2rem; padding: 12px 24px; margin: 14px 0; border: 2px dashed var(--accent); border-radius: 12px; }
+  .ticket.sm { font-size: 1rem; padding: 4px 12px; margin: 0; }
+  .success .row { justify-content: center; margin-top: 14px; }
+  .meta { color: var(--muted); font-size: .88rem; margin: 0 0 12px; }
+  .isi { white-space: pre-wrap; }
+  
+  .badge { display: inline-block; padding: 3px 11px; border-radius: 999px; font-size: .78rem; font-weight: 700; }
+  .badge-baru { background: #fde8e5; color: #a02f23; }
+  .badge-dibaca { background: #e6eefb; color: #2a5aa8; }
+  .badge-diproses { background: #fff1d1; color: #8a5a00; }
+  .badge-selesai { background: #dcf3e6; color: #17683b; }
+  .badge-diterima { background: #e6eefb; color: #2a5aa8; }
+  
+  .balasan-list { display: grid; gap: 10px; margin-bottom: 14px; }
+  .balasan { background: var(--bg); border-left: 4px solid var(--brand); border-radius: 8px; padding: 10px 14px; margin-top: 10px; }
+  .balasan p { margin: 4px 0 0; white-space: pre-wrap; }
+  .balasan-head { display: flex; justify-content: space-between; gap: 8px; font-size: .88rem; }
+  
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; }
+  .stat { font: inherit; text-align: left; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; cursor: pointer; display: grid; color: var(--ink); }
+  .stat b { font-family: 'Fraunces', serif; font-size: 2rem; line-height: 1; }
+  .stat span { color: var(--muted); font-size: .85rem; }
+  .stat:hover { border-color: var(--brand); }
+  .filters { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; padding: 14px; }
+  .filters select, .filters input[type=date] { width: auto; }
+  .table-wrap { padding: 0; overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: .92rem; }
+  th, td { text-align: left; padding: 11px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-size: .75rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+  tr.unread td { font-weight: 600; background: color-mix(in srgb, var(--accent) 8%, transparent); }
+  td a { text-decoration: none; font-weight: 600; }
+  .back { text-decoration: none; font-weight: 600; background: none; border: none; cursor: pointer; padding: 0; font-family: inherit; font-size: inherit; color: inherit;}
+  .riwayat { break-inside: avoid; margin-bottom: 12px; }
+  .print-only { display: none; }
+  
+  /* =========================================
+     6. LOGIKA RESPONSIVE (LAPTOP vs HP)
+     ========================================= */
+  
+  /* Default (Laptop): Sembunyikan yang mobile */
+  .mobile-only { display: none !important; }
+  .bottom-nav { display: none !important; }
+  
+  /* Tampilan HP (Layar < 768px) */
+  @media (max-width: 768px) {
+    /* Sembunyikan Desktop, Munculkan Mobile */
+    .desktop-only { display: none !important; }
+    .mobile-only { display: block !important; }
+  
+    /* Penyesuaian Grid & Tabel */
+    .grid-2 { grid-template-columns: 1fr; }
+    thead { display: none; }
+    tr { display: block; padding: 10px 14px; border-bottom: 1px solid var(--line); }
+    td { display: flex; gap: 10px; border: 0; padding: 3px 0; }
+    td[data-l]::before { content: attr(data-l); width: 80px; flex: none; color: var(--muted); font-size: .78rem; }
+  
+    /* --- CUSTOM MOBILE HOME PAGE --- */
+    .mobile-hero-card { background: var(--brand); color: white; padding: 24px 20px; border-radius: var(--radius); margin-bottom: 16px; }
+    .mobile-hero-card h2 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.5rem; margin-bottom: 8px; line-height: 1.3;}
+    .mobile-hero-card p { font-size: .9rem; opacity: .9; margin-bottom: 20px; }
+    .btn-white { background: var(--bg); color: var(--brand); font-weight: 700; border: none; }
+    
+    .steps-mobile { display: flex; justify-content: space-between; padding: 16px; margin-bottom: 12px; }
+    .steps-mobile .step { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px; font-size: .75rem; }
+    .steps-mobile b { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; color: white; }
+    .steps-mobile b.green { background: var(--brand); }
+  
+    .category-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+    .cat-btn { padding: 16px 12px; text-align: left; font-size: .85rem; display: flex; align-items: center; gap: 8px; cursor: pointer; }
+    .ticket-box { margin-bottom: 20px; }
+    .ticket-box p { font-size: .8rem; margin-bottom: 12px; }
+  
+    /* --- BOTTOM NAVIGATION MOBILE --- */
+    .bottom-nav {
+      display: flex !important;
+      position: fixed; 
+      bottom: 0; 
+      left: 0; 
+      width: 100%;
+      background: var(--surface); 
+      border-top: 1px solid var(--line);
+      justify-content: space-around; 
+      padding: 10px 0 15px 0; 
+      z-index: 999;
+    }
+    
+    .bottom-nav a {
+      display: flex; 
+      flex-direction: column; 
+      align-items: center;
+      text-decoration: none; 
+      color: var(--muted); 
+      font-size: 0.75rem; 
+      gap: 4px;
+      flex: 1; 
+    }
+    
+    .bottom-nav a.active { color: var(--brand); font-weight: 700; }
+    .bottom-nav svg { width: 22px; height: 22px; }
+    
+    /* Beri jarak bawah agar konten tidak tertutup navbar bawah */
+    main.container { padding-bottom: 90px !important; }
+  }
+  
+  /* =========================================
+     7. PRINT STYLE
+     ========================================= */
+  @media print {
+    .navbar, .no-print, .bottom-nav { display: none !important; }
+    .print-only { display: block; }
+    body { background: #fff; color: #000; }
+    .card { border: 1px solid #bbb; }
+  }
+
+  /* =========================================
+   8. PENYESUAIAN TAMPILAN LAPTOP
+   (selector pakai "main.container" supaya menang
+   atas CSS tiap halaman)
+   ========================================= */
+@media (min-width: 769px) {
+   .container { max-width: 1120px; padding: 0 28px; }
+   main.container { padding-top: 36px; padding-bottom: 72px; gap: 24px; }
+ 
+   /* Navbar */
+   .navbar { box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04); }
+   .navbar-in { min-height: 68px; }
+   .navbar nav { gap: 6px; }
+   .navbar nav a { padding: 8px 18px; font-size: 0.95rem; }
+   .brand { font-size: 1.05rem; }
+ 
+   /* Beranda */
+   main.container .home-hero {
+     padding: 44px 48px;
+     border-radius: 20px;
+     margin-bottom: 24px;
+   }
+   main.container .home-hero h2 { font-size: 2.3rem; margin-bottom: 10px; }
+   main.container .home-hero p { font-size: 0.95rem; margin-bottom: 24px; }
+   main.container .home-hero-btn { max-width: 260px; font-size: 1rem; padding: 14px; }
+   main.container .home-grid { gap: 32px; }
+   main.container .home-steps { padding: 22px 16px; }
+   main.container .home-step { font-size: 0.85rem; }
+   main.container .home-step b { width: 26px; height: 26px; font-size: 0.8rem; }
+   main.container .home-alert { font-size: 0.85rem; padding: 14px 18px; }
+   main.container .home-title { font-size: 1.15rem; }
+   main.container .home-cat { height: 92px; font-size: 0.92rem; }
+   main.container .home-ticket { padding: 20px; }
+   main.container .home-ticket h3 { font-size: 1rem; }
+   main.container .home-ticket p { font-size: 0.85rem; }
+   main.container .home-ticket input { font-size: 0.9rem; padding: 12px; }
+ 
+   /* Pilih Kategori: 2 kolom, kartu yang dibuka melebar penuh */
+   main.container .pk { max-width: 900px; }
+   main.container .pk-title { font-size: 1.4rem; }
+   main.container .pk-sub { font-size: 0.95rem; margin-bottom: 22px; }
+   main.container .pk-list { grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+   main.container .pk-card.open { grid-column: 1 / -1; }
+   main.container .pk-top { padding: 18px; }
+   main.container .pk-name { font-size: 1rem; }
+   main.container .pk-hint { font-size: 0.85rem; }
+   main.container .pk-body { font-size: 0.92rem; padding: 0 18px 18px; }
+   main.container .pk-chip, main.container .pk-note { font-size: 0.85rem; }
+   main.container .pk-btn { max-width: 320px; }
+ 
+   /* Kirim Aspirasi: form dalam kartu, 2 kolom */
+   main.container .kr { max-width: 760px; }
+   main.container .kr-title { font-size: 1.4rem; }
+   main.container .kr-form {
+     background: var(--surface);
+     border: 1px solid var(--line);
+     border-radius: 16px;
+     padding: 28px;
+     grid-template-columns: 1fr 1fr;
+     gap: 18px 20px;
+   }
+   main.container .kr-form > :nth-child(-n+2),
+   main.container .kr-form > :nth-child(n+5) { grid-column: 1 / -1; }
+   main.container .kr-field, main.container .kr-group-label { font-size: 0.95rem; }
+   main.container .kr-field input,
+   main.container .kr-field select,
+   main.container .kr-field textarea { font-size: 0.95rem; padding: 12px 14px; }
+   main.container .kr-submit { max-width: 320px; justify-self: end; }
+   main.container .kr.ok-wrap { max-width: 480px; }
+ 
+   /* Lacak Tiket */
+   main.container .lt { max-width: 680px; }
+   main.container .lt-title { font-size: 1.4rem; }
+   main.container .lt-code { font-size: 1.5rem; }
+   main.container .lt-step { font-size: 0.92rem; }
+   main.container .lt-bubble { font-size: 0.92rem; }
+ 
+   /* Login admin */
+   main.container .al { max-width: 440px; margin-top: 24px; }
+ 
+   /* Dashboard admin: daftar 2 kolom */
+   main.container .ad { max-width: 1000px; }
+   main.container .ad-hero { padding: 28px 32px; }
+   main.container .ad-hero h2 { font-size: 1.5rem; }
+   main.container .ad-hero p { font-size: 0.85rem; }
+   main.container .ad-stats { max-width: 520px; }
+   main.container .ad-stat b { font-size: 2rem; }
+   main.container .ad-bar h3 { font-size: 1.05rem; }
+   main.container .ad-chip { font-size: 0.85rem; }
+   main.container .ad-list { grid-template-columns: 1fr 1fr; gap: 16px; }
+   main.container .ad-card { padding: 18px; }
+   main.container .ad-judul { font-size: 0.92rem; }
+   main.container .ad-meta { font-size: 0.8rem; }
+   main.container .ad-card:hover { border-color: var(--brand); }
+ 
+   /* Statistik: dua grafik berdampingan */
+   main.container .st {
+     max-width: 1000px;
+     display: grid;
+     grid-template-columns: 1fr 1fr;
+     gap: 20px;
+     align-items: start;
+   }
+   main.container .st-head,
+   main.container .st-chips,
+   main.container .st-error { grid-column: 1 / -1; }
+   main.container .st-card { margin-bottom: 0; padding: 20px; }
+   main.container .st-head h2 { font-size: 1.4rem; }
+   main.container .st-row { font-size: 0.85rem; }
+ 
+   /* Riwayat */
+   main.container .rw { max-width: 900px; }
+   main.container .rw-title { font-size: 1.4rem; }
+   main.container .rw-filter {
+     grid-template-columns: 220px 1fr auto;
+     align-items: end;
+     gap: 16px;
+   }
+   main.container .rw-card { padding: 18px; }
+   main.container .rw-judul { font-size: 0.95rem; }
+   main.container .rw-isi, main.container .rw-bal { font-size: 0.88rem; }
+ 
+   /* Profil */
+   main.container .pf { max-width: 560px; }
+   main.container .pf-title { font-size: 1.4rem; }
+   main.container .pf-item { font-size: 0.92rem; padding: 16px 18px; }
+ }
